@@ -1708,6 +1708,30 @@ static const struct panel_desc innolux_zj070na_01p = {
 	},
 };
 
+static const struct drm_display_mode innolux_at070tn94_mode = {
+	.clock = 30000,
+	.hdisplay = 800,
+	.hsync_start = 800 + 210,
+	.hsync_end = 800 + 210 + 46,
+	.htotal = 800 + 210 + 46 + 10,
+	.vdisplay = 480,
+	.vsync_start = 480 + 23,
+	.vsync_end = 480 + 23 + 22,
+	.vtotal = 480 + 23 + 22 + 5,
+	.vrefresh = 60,
+};
+
+static const struct panel_desc innolux_at070tn94 = {
+	.modes = &innolux_at070tn94_mode,
+	.num_modes = 1,
+	.bpc = 6,
+	.size = {
+		.width = 108,
+		.height = 65,
+	},
+	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+};
+
 static const struct drm_display_mode lg_lb070wv8_mode = {
 	.clock = 33246,
 	.hdisplay = 800,
@@ -2192,6 +2216,9 @@ static const struct of_device_id platform_of_match[] = {
 		.compatible = "shelly,sca07010-bfn-lnn",
 		.data = &shelly_sca07010_bfn_lnn,
 	}, {
+		.compatible = "innolux,at070tn94",
+		.data = &innolux_at070tn94,
+	}, {	
 		/* sentinel */
 	}
 };

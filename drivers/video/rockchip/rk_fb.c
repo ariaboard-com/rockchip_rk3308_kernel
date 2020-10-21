@@ -3888,6 +3888,8 @@ int rk_fb_disp_scale(u8 scale_x, u8 scale_y, u8 lcdc_id)
 	return 0;
 }
 
+#if !defined(CONFIG_FRAMEBUFFER_CONSOLE)
+
 #if defined(CONFIG_ION_ROCKCHIP)
 static int rk_fb_alloc_buffer_by_ion(struct fb_info *fbi,
 				     struct rk_lcdc_win *win,
@@ -4054,6 +4056,7 @@ static int rk_fb_alloc_buffer(struct fb_info *fbi)
 		fbi->fix.smem_len);
 	return ret;
 }
+#endif
 
 #if 0
 static int rk_release_fb_buffer(struct fb_info *fbi)
@@ -4237,9 +4240,12 @@ int rk_fb_register(struct rk_lcdc_driver *dev_drv,
 	struct fb_info *fbi;
 	struct rk_fb_par *fb_par = NULL;
 	int i = 0, ret = 0, index = 0;
-	unsigned long flags;
 	char time_line_name[16];
+
+#if !defined(CONFIG_FRAMEBUFFER_CONSOLE)
 	int mirror = 0;
+	unsigned long flags;
+#endif
 
 	if (rk_fb->num_lcdc == RK30_MAX_LCDC_SUPPORT)
 		return -ENXIO;

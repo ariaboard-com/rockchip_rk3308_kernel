@@ -212,6 +212,8 @@ struct rk3308_codec_priv {
 #if defined(CONFIG_DEBUG_FS)
 	struct dentry *dbg_codec;
 #endif
+
+	bool hpout_always_on;
 };
 
 static const DECLARE_TLV_DB_SCALE(rk3308_codec_alc_agc_grp_gain_tlv,
@@ -4459,6 +4461,9 @@ static int rk3308_platform_probe(struct platform_device *pdev)
 	rk3308->no_hp_det =
 		of_property_read_bool(np, "rockchip,no-hp-det");
 
+	rk3308->hpout_always_on =
+		of_property_read_bool(np, "rockchip,hpout-always-on");
+
 	rk3308->delay_loopback_handle_ms = LOOPBACK_HANDLE_MS;
 	ret = of_property_read_u32(np, "rockchip,delay-loopback-handle-ms",
 				   &rk3308->delay_loopback_handle_ms);
@@ -4566,7 +4571,14 @@ static int rk3308_platform_probe(struct platform_device *pdev)
 				  rk3308_codec_loopback_work);
 
 	rk3308->adc_grp0_using_linein = ADC_GRP0_MICIN;
-	rk3308->dac_output = DAC_LINEOUT;
+
+	if(rk3308->hpout_always_on) {
+		rk3308->dac_output = DAC_LINEOUT_HPOUT;
+		rk3308_codec_dac_switch(rk3308, rk3308->dac_output);
+	}
+	else
+		rk3308->dac_output = DAC_LINEOUT;
+
 	rk3308->adc_zerocross = 1;
 	rk3308->pm_state = PM_NORMAL;
 

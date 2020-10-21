@@ -292,6 +292,18 @@
 		memory-region = <&ramoops_mem>;
 	};
 
+	panel: panel {
+		compatible = "auo,b101ean01";
+		status = "disabled";
+		bus-format = <MEDIA_BUS_FMT_RGB888_1X24>;
+
+		ports {
+			panel_in_rgb: endpoint {
+				remote-endpoint = <&rgb_out_panel>;
+			};
+		};
+	};
+
 	rgb: rgb {
 		compatible = "rockchip,rk3308-rgb";
 		status = "disabled";
@@ -314,6 +326,15 @@
 				};
 			};
 
+                        rgb_out: port@1 {
+                                reg = <1>;
+                                #address-cells = <1>;
+                                #size-cells = <0>;
+
+                                rgb_out_panel: endpoint {
+                                        remote-endpoint = <&panel_in_rgb>;
+                                };
+                        };
 		};
 	};
 
@@ -1714,7 +1735,7 @@
 			lcdc_ctl: lcdc-ctl {
 				rockchip,pins =
 					/* dclk */
-					<1 RK_PA0 RK_FUNC_1 &pcfg_pull_none>,
+					<1 RK_PA0 RK_FUNC_1 &pcfg_pull_none_12ma>,
 					/* hsync */
 					<1 RK_PA1 RK_FUNC_1 &pcfg_pull_none>,
 					/* vsync */
